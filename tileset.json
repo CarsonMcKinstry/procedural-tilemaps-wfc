@@ -1,0 +1,124 @@
+{
+    "ref": {
+        "name": "./tilset.png",
+        "tileConfig": {
+            "size": 16,
+            "height": 4,
+            "width": 4
+        }
+    },
+    "tiles": [
+        {
+            "connectors": {
+                "north": "11",
+                "east": "11",
+                "south": "11",
+                "west": "11"
+            }
+        },
+        {
+            "connectors": {
+                "north": "00",
+                "east": "00",
+                "south": "00",
+                "west": "00"
+            }
+        },
+        {
+            "connectors": {
+                "north": "00",
+                "east": "00",
+                "south": "10",
+                "west": "01"
+            }
+        },
+        {
+            "connectors": {
+                "north": "10",
+                "east": "00",
+                "south": "00",
+                "west": "10"
+            }
+        },
+        {
+            "connectors": {
+                "north": "01",
+                "east": "10",
+                "south": "00",
+                "west": "00"
+            }
+        },
+        {
+            "connectors": {
+                "north": "00",
+                "east": "01",
+                "south": "01",
+                "west": "00"
+            }
+        },
+        {
+            "connectors": {
+                "north": "11",
+                "east": "11",
+                "south": "01",
+                "west": "10"
+            }
+        },
+        {
+            "connectors": {
+                "north": "01",
+                "east": "11",
+                "south": "11",
+                "west": "01"
+            }
+        },
+        {
+            "connectors": {
+                "north": "10",
+                "east": "01",
+                "south": "11",
+                "west": "11"
+            }
+        },
+        {
+            "connectors": {
+                "north": "11",
+                "east": "10",
+                "south": "10",
+                "west": "11"
+            }
+        },
+        {
+            "connectors": {
+                "north": "10",
+                "east": "00",
+                "south": "10",
+                "west": "11"
+            }
+        },
+        {
+            "connectors": {
+                "north": "11",
+                "east": "10",
+                "south": "00",
+                "west": "10"
+            }
+        },
+        {
+            "connectors": {
+                "north": "01",
+                "east": "11",
+                "south": "01",
+                "west": "00"
+            }
+        },
+        {
+            "connectors": {
+                "north": "00",
+                "east": "01",
+                "south": "11",
+                "west": "01"
+            }
+        }
+    ]
+}
