@@ -77,7 +77,7 @@ async function createImage(
     );
     const tileCtx = tileCanvas.getContext('2d');
 
-    const tileImage = await loadImage('./tileset.png');
+    const tileImage = await loadImage(ref.image);
     tileCtx.drawImage(tileImage, 0, 0);
 
     const canvas = createCanvas(width * tileSize, height * tileSize);

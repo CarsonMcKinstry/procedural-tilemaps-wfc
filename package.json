@@ -15,10 +15,7 @@
   },
   "scripts": {
     "start": "ts-node src/index.ts",
-    "test": "jest"
-  },
-  "main": "bin/index.js",
-  "bin": {
-    "build": "./bin/index.js"
+    "test": "jest",
+    "example": "ts-node src/index.ts -h 30 -w 40 -t ./example/tileset.json -o ./example/map.png -f"
   }
 }

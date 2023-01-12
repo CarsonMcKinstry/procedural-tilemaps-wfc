@@ -1,6 +1,6 @@
 {
     "ref": {
-        "name": "./tilset.png",
+        "image": "./example/tileset.png",
         "tileConfig": {
             "size": 16,
             "height": 4,
