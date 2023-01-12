@@ -10,10 +10,15 @@
   },
   "dependencies": {
     "canvas": "^2.11.0",
+    "commander": "^9.5.0",
     "iron-oxide": "^1.4.0"
   },
   "scripts": {
     "start": "ts-node src/index.ts",
     "test": "jest"
+  },
+  "main": "bin/index.js",
+  "bin": {
+    "build": "./bin/index.js"
   }
 }
