@@ -3,7 +3,7 @@ import { createCanvas, loadImage } from 'canvas';
 import path from 'path';
 import { Grid } from './Grid';
 import { GridNode } from './GridNode';
-import { Tile, Tileset } from './types';
+import { Tile, TilemapConfig, Tileset } from './types';
 import { enhanceTileReference } from './utils/enhanceTileReference';
 
 const tilesetJsonPath = path.resolve('./tileset.json');
@@ -14,13 +14,14 @@ const getJson = async <T>(path: PathLike): Promise<T> => {
     return JSON.parse(file);
 }
 
-(async function main() {
-    const { tiles, ref } = await getJson<Tileset>(tilesetJsonPath);
+
+
+function createTileMap(tileset: Tileset, tileMapConfig: TilemapConfig): Grid {
+    const { width, height } = tileMapConfig;
+    const { tiles, ref } = tileset;
 
     const tilesWithPossibleConnections: Tile[] = tiles.map(enhanceTileReference);
 
-    const width = 40;
-    const height = 30;
     const g = new Grid(width, height, tilesWithPossibleConnections.length);
 
     const queue: GridNode[] = [];
@@ -55,6 +56,14 @@ const getJson = async <T>(path: PathLike): Promise<T> => {
         }
     }
 
+    return g;
+}
+
+async function createImage(grid: Grid, tileset: Tileset, tileMapConfig?: { showGridLines?: boolean }): Promise<Buffer> {
+    const { ref } = tileset;
+
+    const { height, width } = grid;
+    const { showGridLines = false } = tileMapConfig ?? {};
     const tileSize = ref.tileConfig.size;
 
     const tileCanvas = createCanvas(tileSize * ref.tileConfig.width, tileSize * ref.tileConfig.height);
@@ -67,7 +76,7 @@ const getJson = async <T>(path: PathLike): Promise<T> => {
     const ctx = canvas.getContext('2d');
 
     let index = 0;
-    for (const node of g.nodes) {
+    for (const node of grid.nodes) {
         const tileIndex = node.value.unwrap().index;
 
         // position
@@ -82,15 +91,30 @@ const getJson = async <T>(path: PathLike): Promise<T> => {
             s_x * tileSize, s_y * tileSize, tileSize, tileSize,
             d_x * tileSize, d_y * tileSize, tileSize, tileSize
         )
-        // ctx.strokeRect(
-        //     d_x * tileSize + 0.5,
-        //     d_y * tileSize + 0.5,
-        //     tileSize, tileSize
-        // )
+
+        if (showGridLines) {
+            ctx.strokeRect(
+                d_x * tileSize + 0.5,
+                d_y * tileSize + 0.5,
+                tileSize, tileSize
+            )
+        }
 
         index++;
     }
 
-    await fs.writeFile("out.png", canvas.toBuffer());
+    return canvas.toBuffer();
+}
 
+(async function main() {
+    const tileset = await getJson<Tileset>(tilesetJsonPath);
+
+    const width = 40;
+    const height = 30;
+
+    const g = createTileMap(tileset, { width, height });
+
+    const map = await createImage(g, tileset);
+
+    await fs.writeFile("out.png", map);
 })();

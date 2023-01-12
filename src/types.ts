@@ -28,3 +28,8 @@ export type Tileset = {
     },
     tiles: TileReference[];
 }
+
+export interface TilemapConfig {
+    height: number,
+    width: number
+}
