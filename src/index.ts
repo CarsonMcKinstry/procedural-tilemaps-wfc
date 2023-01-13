@@ -17,10 +17,9 @@ const getJson = async <T>(path: PathLike): Promise<T> => {
 
 function createTileMap(tileset: Tileset, tileMapConfig: TilemapConfig): Grid {
     const { width, height } = tileMapConfig;
-    const { tiles, ref } = tileset;
+    const { tiles } = tileset;
 
-    const tilesWithPossibleConnections: Tile[] =
-        tiles.map(enhanceTileReference);
+    const tilesWithPossibleConnections: Tile[] = tiles.map(enhanceTileReference);
 
     const g = new Grid(width, height, tilesWithPossibleConnections.length);
 
@@ -34,8 +33,8 @@ function createTileMap(tileset: Tileset, tileMapConfig: TilemapConfig): Grid {
         if (curr) {
             curr.collapse(tilesWithPossibleConnections);
 
-            const neighbors: GridNode[] = Object.values(curr.neighbors).flatMap(
-                (n) => (n.isSome() ? [n.unwrap()] : [])
+            const neighbors: GridNode[] = Object.values(curr.neighbors).flatMap((n) =>
+                n.isSome() ? [n.unwrap()] : []
             );
 
             for (const neighbor of neighbors) {
@@ -60,21 +59,14 @@ function createTileMap(tileset: Tileset, tileMapConfig: TilemapConfig): Grid {
     return g;
 }
 
-async function createImage(
-    grid: Grid,
-    tileset: Tileset,
-    tileMapConfig?: { showGridLines?: boolean }
-): Promise<Buffer> {
+async function createImage(grid: Grid, tileset: Tileset, tileMapConfig?: { showGridLines?: boolean }): Promise<Buffer> {
     const { ref } = tileset;
 
     const { height, width } = grid;
     const { showGridLines = false } = tileMapConfig ?? {};
     const tileSize = ref.tileConfig.size;
 
-    const tileCanvas = createCanvas(
-        tileSize * ref.tileConfig.width,
-        tileSize * ref.tileConfig.height
-    );
+    const tileCanvas = createCanvas(tileSize * ref.tileConfig.width, tileSize * ref.tileConfig.height);
     const tileCtx = tileCanvas.getContext('2d');
 
     const tileImage = await loadImage(ref.image);
@@ -107,12 +99,7 @@ async function createImage(
         );
 
         if (showGridLines) {
-            ctx.strokeRect(
-                d_x * tileSize + 0.5,
-                d_y * tileSize + 0.5,
-                tileSize,
-                tileSize
-            );
+            ctx.strokeRect(d_x * tileSize + 0.5, d_y * tileSize + 0.5, tileSize, tileSize);
         }
 
         index++;
@@ -123,22 +110,10 @@ async function createImage(
 
 program
     .requiredOption('-t, --tileset <string>.json', 'You must provide a tileset')
-    .requiredOption(
-        '-h, --height <number>',
-        'You must provide a tile height for the output png'
-    )
-    .requiredOption(
-        '-w, --width <number>',
-        'You must provide a tile width for the output png'
-    )
-    .requiredOption(
-        '-o, --out <string>.png',
-        'You must provide an output target'
-    )
-    .option(
-        '-f, --force',
-        'Overwrite the current output file, if it already exists'
-    )
+    .requiredOption('-h, --height <number>', 'You must provide a tile height for the output png')
+    .requiredOption('-w, --width <number>', 'You must provide a tile width for the output png')
+    .requiredOption('-o, --out <string>.png', 'You must provide an output target')
+    .option('-f, --force', 'Overwrite the current output file, if it already exists')
     .option('-d, --debug', 'Adds gridlines to the output png');
 
 (async function main() {
@@ -185,9 +160,7 @@ program
             output: process.stdout,
         });
 
-        let answer = await rl.question(
-            `A file with the name ${out} already exists. Overwrite? Y/N `
-        );
+        let answer = await rl.question(`A file with the name ${out} already exists. Overwrite? Y/N `);
 
         if (!['yes', 'no', 'y', 'n'].includes(answer.toLowerCase())) {
             answer = await rl.question('Please enter only Y(es)/N(o). ');
@@ -210,10 +183,7 @@ program
     console.log('===== Details =====');
     console.log('Time to produce:', elapsedTimeReadable);
     console.log('Tilset:', tilesetPath);
-    console.log(
-        'Tile size:',
-        `${tileset.ref.tileConfig.size}px X ${tileset.ref.tileConfig.size}px`
-    );
+    console.log('Tile size:', `${tileset.ref.tileConfig.size}px X ${tileset.ref.tileConfig.size}px`);
     console.log('Tile width:', width);
     console.log('Tile height:', height);
     if (debug) {

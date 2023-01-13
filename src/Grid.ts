@@ -1,6 +1,6 @@
-import { Some, Result, Ok, Err } from "iron-oxide";
-import { GridNode } from "./GridNode";
-import { Tile } from "./types";
+import { Some, Result, Ok, Err } from 'iron-oxide';
+import { GridNode } from './GridNode';
+import { Tile } from './types';
 
 export class Grid {
     width: number;
@@ -62,7 +62,7 @@ export class Grid {
 
     private getNode(x: number, y: number): Result<GridNode, string> {
         if (x < 0 || x >= this.width) {
-            return Err(`x out of bounds, got '${x}'`)
+            return Err(`x out of bounds, got '${x}'`);
         }
 
         if (y < 0 || y >= this.height) {
@@ -76,7 +76,7 @@ export class Grid {
             return Ok(node);
         }
 
-        return Err("Unable to find node at (${x}, ${y})");
+        return Err('Unable to find node at (${x}, ${y})');
     }
 
     get root() {

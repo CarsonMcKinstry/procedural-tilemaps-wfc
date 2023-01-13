@@ -1,5 +1,5 @@
-import { None, Option, Some } from "iron-oxide";
-import { Tile } from "./types";
+import { None, Option, Some } from 'iron-oxide';
+import { Tile } from './types';
 
 interface GridNodeNeighbors {
     north: Option<GridNode>;
@@ -15,18 +15,15 @@ export class GridNode {
         north: None(),
         east: None(),
         south: None(),
-        west: None()
-    }
+        west: None(),
+    };
 
     possibleTiles: number;
     collapsed: boolean = false;
     entropy: number = 0;
 
     constructor(numTiles: number) {
-        this.possibleTiles = parseInt(
-            "1".repeat(numTiles),
-            2
-        );
+        this.possibleTiles = parseInt('1'.repeat(numTiles), 2);
         this.calculateEntropy();
     }
 
@@ -35,18 +32,25 @@ export class GridNode {
             const original = this.possibleTiles;
             const { north, east, south, west } = this.neighbors;
 
-            if (north.isSome() && north.unwrap().value.isSome()) {
-                this.possibleTiles = this.possibleTiles & north.unwrap().value.unwrap().possibleConnections.south;
-            }
-            if (east.isSome() && east.unwrap().value.isSome()) {
-                this.possibleTiles = this.possibleTiles & east.unwrap().value.unwrap().possibleConnections.west;
-            }
-            if (south.isSome() && south.unwrap().value.isSome()) {
-                this.possibleTiles = this.possibleTiles & south.unwrap().value.unwrap().possibleConnections.north;
-            }
-            if (west.isSome() && west.unwrap().value.isSome()) {
-                this.possibleTiles = this.possibleTiles & west.unwrap().value.unwrap().possibleConnections.east;
-            }
+            this.possibleTiles = north
+                .andThen((node) => node.value)
+                .map((tile) => this.possibleTiles & tile.possibleConnections.south)
+                .unwrapOr(this.possibleTiles);
+
+            this.possibleTiles = east
+                .andThen((node) => node.value)
+                .map((tile) => this.possibleTiles & tile.possibleConnections.west)
+                .unwrapOr(this.possibleTiles);
+
+            this.possibleTiles = south
+                .andThen((node) => node.value)
+                .map((tile) => this.possibleTiles & tile.possibleConnections.north)
+                .unwrapOr(this.possibleTiles);
+
+            this.possibleTiles = west
+                .andThen((node) => node.value)
+                .map((tile) => this.possibleTiles & tile.possibleConnections.east)
+                .unwrapOr(this.possibleTiles);
 
             if (original !== this.possibleTiles) {
                 this.calculateEntropy();
@@ -74,8 +78,7 @@ export class GridNode {
         this.entropy = this.possibleTiles
             .toString(2)
             .split('')
-            .filter(val => val === '1')
-            .length;
+            .filter((val) => val === '1').length;
     }
 
     collapse(tiles: Tile[]) {
@@ -89,17 +92,13 @@ export class GridNode {
             .toString(2)
             .split('')
             .reverse()
-            .flatMap((val, i) => val === '1' ? [i] : []);
+            .flatMap((val, i) => (val === '1' ? [i] : []));
 
         const i = Math.floor(Math.random() * possibleTiles.length);
 
-        const randomTile = possibleTiles[
-            i
-        ];
+        const randomTile = possibleTiles[i];
 
-        this.value = Some(
-            tiles[randomTile]
-        );
+        this.value = Some(tiles[randomTile]);
 
         this.possibleTiles = Math.pow(2, randomTile);
 

@@ -1,28 +1,23 @@
-import { TileReference, Tile } from "../types";
+import { TileReference, Tile } from '../types';
 
 type Direction = keyof TileReference['connectors'];
 
 const complementDirections: Record<Direction, Direction> = {
-    north: "south",
-    east: "west",
-    south: "north",
-    west: "east"
-}
+    north: 'south',
+    east: 'west',
+    south: 'north',
+    west: 'east',
+};
 
-const calculateConnection = (
-    tile: TileReference,
-    direction: Direction,
-    allTiles: TileReference[]
-) => {
+const calculateConnection = (tile: TileReference, direction: Direction, allTiles: TileReference[]) => {
     const complementDirection = complementDirections[direction];
-    return allTiles
-        .reduce((acc, otherTile, index) => {
-            if (tile.connectors[direction] === otherTile.connectors[complementDirection]) {
-                return acc + Math.pow(2, index);
-            }
+    return allTiles.reduce((acc, otherTile, index) => {
+        if (tile.connectors[direction] === otherTile.connectors[complementDirection]) {
+            return acc + Math.pow(2, index);
+        }
 
-            return acc;
-        }, 0);
+        return acc;
+    }, 0);
 };
 
 export function enhanceTileReference(tile: TileReference, index: number, allTiles: TileReference[]): Tile {
@@ -38,7 +33,7 @@ export function enhanceTileReference(tile: TileReference, index: number, allTile
             north,
             east,
             south,
-            west
-        }
-    }
+            west,
+        },
+    };
 }
